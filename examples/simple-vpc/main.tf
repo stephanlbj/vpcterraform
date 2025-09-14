@@ -1,5 +1,5 @@
 module "network" {
-  source = "../../modules/vpc"
+  source = "../modules/vpc"
   name   = "prod-vpc"
   cidr_block = "10.0.0.0/16"
   public_subnet_cidr  = "10.0.1.0/24"
@@ -7,14 +7,14 @@ module "network" {
 }
 
 module "security" {
-  source = "../../modules/security"
+  source = "../modules/security"
   vpc_id = module.network.vpc_id
   sg_name = "web-sg"
   allowed_ssh_cidrs = ["123.45.67.89/32"]
 }
 
 module "instances" {
-  source            = "../../modules/ec2"
+  source            = "../modules/ec2"
   name              = "webapp"
   ami_id            = "ami-12345678"
   instance_type     = "t2.micro"
