@@ -4,11 +4,6 @@ variable "name" {
   default     = "my-ec2"
 }
 
-variable "ami_id" {
-  description = "AMI à utiliser pour les instances"
-  type        = string
-}
-
 variable "instance_type" {
   description = "Type des instances EC2"
   type        = string

@@ -1,6 +1,24 @@
+# Récupère la dernière Amazon Linux 2 disponible dans la région
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]  # AMI officielle d'Amazon
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+
+
 # Instance EC2 publique
 resource "aws_instance" "public" {
-  ami                    = var.ami_id
+  ami                    = data.aws_ami.amazon_linux.id
   instance_type          = var.instance_type
   subnet_id              = var.public_subnet_id
   vpc_security_group_ids = [var.sg_id]
@@ -20,7 +38,7 @@ resource "aws_instance" "public" {
 
 # Instance EC2 privée
 resource "aws_instance" "private" {
-  ami                    = var.ami_id
+  ami                    = data.aws_ami.amazon_linux.id
   instance_type          = var.instance_type
   subnet_id              = var.private_subnet_id
   vpc_security_group_ids = [var.sg_id]
