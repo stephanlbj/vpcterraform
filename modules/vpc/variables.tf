@@ -1,9 +1,3 @@
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "eu-north-1"
-}
-
 variable "name" {
   description = "Nom du VPC"
   type        = string
@@ -27,3 +21,6 @@ variable "private_subnet_cidr" {
   type        = string
   default     = "10.0.2.0/24"
 }
+
+
+

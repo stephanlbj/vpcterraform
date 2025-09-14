@@ -1,39 +1,28 @@
-provider "aws" {
-  region = var.region
+module "network" {
+  source = "../../modules/vpc"
+  name   = "prod-vpc"
+  cidr_block = "10.0.0.0/16"
+  public_subnet_cidr  = "10.0.1.0/24"
+  private_subnet_cidr = "10.0.2.0/24"
 }
 
-resource "aws_vpc" "this" {
-  cidr_block           = var.cidr_block
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-
-  tags = {
-    Name = var.name
-  }
+module "security" {
+  source = "../../modules/security"
+  vpc_id = module.network.vpc_id
+  sg_name = "web-sg"
+  allowed_ssh_cidrs = ["123.45.67.89/32"]
 }
 
-# Récupère automatiquement les AZ disponibles pour ton compte
-data "aws_availability_zones" "available" {}
-
-
-resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.this.id
-  cidr_block              = var.public_subnet_cidr
-  map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.available.names[0]
-
-  tags = {
-    Name = "${var.name}-public-subnet"
-  }
+module "instances" {
+  source            = "../../modules/ec2"
+  name              = "webapp"
+  ami_id            = "ami-12345678"
+  instance_type     = "t2.micro"
+  public_subnet_id  = module.network.public_subnet_id
+  private_subnet_id = module.network.private_subnet_id
+  sg_id             = module.security.sg_id
 }
 
-
-resource "aws_subnet" "private" {
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = var.private_subnet_cidr
-  availability_zone       = data.aws_availability_zones.available.names[0]
-
-  tags = {
-    Name = "${var.name}-private-subnet"
-  }
+output "public_ip" {
+  value = module.instances.public_ec2_ip
 }

@@ -1,16 +1,12 @@
 output "vpc_id" {
-  description = "ID du VPC créé"
-  value       = aws_vpc.this.id
+  value = module.network.vpc_id
 }
- 
 
 output "public_subnet_id" {
-  description = "ID du subnet public"
-  value       = aws_subnet.public.id
+  value = module.network.public_subnet_id
 }
 
 output "private_subnet_id" {
-  description = "ID du subnet privé"
-  value       = aws_subnet.private.id
+  value = module.network.private_subnet_id
 }
 
