@@ -16,7 +16,7 @@ module "security" {
 module "instances" {
   source            = "./modules/ec2"
   name              = "webapp"
-  instance_type     = "t2.micro"
+  instance_type     = "t3.micro"
   public_subnet_id  = module.network.public_subnet_id
   private_subnet_id = module.network.private_subnet_id
   sg_id             = module.security.sg_id
